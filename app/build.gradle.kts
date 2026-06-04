@@ -12,6 +12,7 @@ repositories {
 }
 
 dependencies {
+    implementation("info.picocli:picocli:4.7.6")
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
@@ -22,5 +23,5 @@ tasks.test {
 }
 
 application {
-    mainClass.set("hexlet.code.Main");
+    mainClass.set("hexlet.code.App");
 }
