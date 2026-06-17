@@ -32,18 +32,23 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Run checkstyle
-        run: make checkstyle
+        working-directory: ./app
+        run: ./gradlew checkstyleMain checkstyleTest
 
       - name: Run tests
-        run: make test
+        working-directory: ./app
+        run: ./gradlew test
 
       - name: Generate coverage report
-        run: make jacoco
+        working-directory: ./app
+        run: ./gradlew jacocoTestReport
 
       - name: Build with Gradle
-        run: make build
+        working-directory: ./app
+        run: ./gradlew build
 
       - name: SonarQube Scan
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        working-directory: ./app
         run: ./gradlew sonarqube
