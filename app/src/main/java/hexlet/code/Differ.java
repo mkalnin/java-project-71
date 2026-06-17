@@ -12,7 +12,7 @@ import java.util.List;
 
 public class Differ {
 
-    private static final ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     public static String generate(String filepath1, String filepath2) throws Exception {
         return generate(filepath1, filepath2, "stylish");
@@ -32,7 +32,7 @@ public class Differ {
 
     private static Object readAndParse(String filepath) throws Exception {
         String content = Files.readString(Paths.get(filepath));
-        return mapper.readValue(content, Object.class);
+        return MAPPER.readValue(content, Object.class);
     }
 
     @SuppressWarnings("unchecked")
@@ -87,8 +87,8 @@ public class Differ {
             case "json":
                 return formatJson(diff);
             default:
-                throw new Exception("Unsupported format: " + format +
-                        ". Supported formats: stylish, plain, json");
+                throw new Exception("Unsupported format: " + format
+                        + ". Supported formats: stylish, plain, json");
         }
     }
 
@@ -117,6 +117,8 @@ public class Differ {
                 case UNCHANGED:
                     result.append("    ").append(key).append(": ")
                             .append(formatValue(diffEntry.getOldValue())).append("\n");
+                    break;
+                default:
                     break;
             }
         }
@@ -207,6 +209,6 @@ public class Differ {
             jsonOutput.put(key, diffData);
         }
 
-        return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonOutput);
+        return MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(jsonOutput);
     }
 }

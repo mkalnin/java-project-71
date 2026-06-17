@@ -1,0 +1,7 @@
+{
+  "host": "127.0.0.1",
+  "port": 8081,
+  "timeout": 10000,
+  "debug": false,
+  "newField": "value"
+}
