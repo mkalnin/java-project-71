@@ -210,4 +210,31 @@ class DifferTest {
             Differ.generate("test.txt", file1Json);
         });
     }
+
+    @Test
+    @DisplayName("Should format nested JSON in plain format correctly")
+    void testNestedJsonPlainFormatDetailed() throws Exception {
+        String result = Differ.generate(file4Json, file5Json, "plain");
+
+        assertThat(result).isNotNull();
+
+        // Проверяем конкретные строки вывода
+        assertThat(result).contains("Property 'chars2' was updated. From [complex value] to false");
+        assertThat(result).contains("Property 'checked' was updated. From false to true");
+        assertThat(result).contains("Property 'default' was updated. From null to [complex value]");
+        assertThat(result).contains("Property 'id' was updated. From 45 to null");
+        assertThat(result).contains("Property 'key1' was removed");
+        assertThat(result).contains("Property 'key2' was added with value: 'value2'");
+        assertThat(result).contains("Property 'numbers2' was updated. From [complex value] to [complex value]");
+        assertThat(result).contains("Property 'numbers3' was removed");
+        assertThat(result).contains("Property 'numbers4' was added with value: [complex value]");
+        assertThat(result).contains("Property 'obj1' was added with value: [complex value]");
+        assertThat(result).contains("Property 'setting1' was updated. From 'Some value' to 'Another value'");
+        assertThat(result).contains("Property 'setting2' was updated. From 200 to 300");
+        assertThat(result).contains("Property 'setting3' was updated. From true to 'none'");
+
+        // Проверяем, что нет лишних свойств
+        String[] lines = result.split("\n");
+        assertThat(lines).hasSize(13); // Должно быть 13 строк с изменениями
+    }
 }

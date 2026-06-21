@@ -1,6 +1,7 @@
 package hexlet.code.formatters;
 
 import hexlet.code.DiffEntry;
+import java.util.List;
 import java.util.Map;
 
 public class PlainFormatter extends AbstractFormatter {
@@ -23,7 +24,7 @@ public class PlainFormatter extends AbstractFormatter {
             case ADDED:
                 result.append("Property '").append(key)
                         .append("' was added with value: ")
-                        .append(ValueFormatter.formatPlainValue(diffEntry.getNewValue()))
+                        .append(formatPlainValue(diffEntry.getNewValue()))
                         .append("\n");
                 break;
             case REMOVED:
@@ -33,14 +34,27 @@ public class PlainFormatter extends AbstractFormatter {
             case CHANGED:
                 result.append("Property '").append(key)
                         .append("' was updated. From ")
-                        .append(ValueFormatter.formatPlainValue(diffEntry.getOldValue()))
+                        .append(formatPlainValue(diffEntry.getOldValue()))
                         .append(" to ")
-                        .append(ValueFormatter.formatPlainValue(diffEntry.getNewValue()))
+                        .append(formatPlainValue(diffEntry.getNewValue()))
                         .append("\n");
                 break;
             default:
                 break;
         }
+    }
+
+    private String formatPlainValue(Object value) {
+        if (value == null) {
+            return "null";
+        }
+        if (value instanceof String) {
+            return "'" + value + "'";
+        }
+        if (value instanceof Map || value instanceof List) {
+            return "[complex value]";
+        }
+        return value.toString();
     }
 
     @Override
