@@ -5,7 +5,7 @@ import hexlet.code.DiffEntry;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class JsonFormatter implements Formatter {
+public class JsonFormatter extends AbstractFormatter {
 
     private static final ObjectMapper JSON_MAPPER = new ObjectMapper();
 
@@ -34,7 +34,7 @@ public class JsonFormatter implements Formatter {
     }
 
     @Override
-    public boolean supports(String format) {
-        return "json".equalsIgnoreCase(format);
+    protected String getFormatName() {
+        return "json";
     }
 }
