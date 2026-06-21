@@ -17,6 +17,7 @@ repositories {
 dependencies {
     implementation("info.picocli:picocli:4.7.6")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.15.2")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.15.2")
 
     annotationProcessor("info.picocli:picocli:4.7.6")
 

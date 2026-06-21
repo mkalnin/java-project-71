@@ -1,59 +1,55 @@
 package hexlet.code;
 
+import hexlet.code.parsers.ParserFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Map;
 import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.List;
 
-public class Differ {
+public final class Differ {
 
-    private static final ObjectMapper MAPPER = new ObjectMapper();
+    private static final ObjectMapper JSON_MAPPER = new ObjectMapper();
+
+    private Differ() {
+    }
 
     public static String generate(String filepath1, String filepath2) throws Exception {
         return generate(filepath1, filepath2, "stylish");
     }
 
     public static String generate(String filepath1, String filepath2, String format) throws Exception {
-        Object data1 = readAndParse(filepath1);
-        Object data2 = readAndParse(filepath2);
-
-        Map<String, Object> map1 = convertToMap(data1);
-        Map<String, Object> map2 = convertToMap(data2);
+        Map<String, Object> map1 = readAndParse(filepath1);
+        Map<String, Object> map2 = readAndParse(filepath2);
 
         Map<String, DiffEntry> diff = buildDiff(map1, map2);
 
         return formatOutput(diff, format);
     }
 
-    private static Object readAndParse(String filepath) throws Exception {
+    private static Map<String, Object> readAndParse(String filepath) throws Exception {
         String content = Files.readString(Paths.get(filepath));
-        return MAPPER.readValue(content, Object.class);
+        String extension = getFileExtension(filepath);
+
+        var parser = ParserFactory.getParser(extension);
+        return parser.parse(content);
     }
 
-    @SuppressWarnings("unchecked")
-    private static Map<String, Object> convertToMap(Object data) {
-        if (data instanceof Map) {
-            return (Map<String, Object>) data;
-        } else if (data instanceof List) {
-            Map<String, Object> map = new LinkedHashMap<>();
-            List<?> list = (List<?>) data;
-            for (int i = 0; i < list.size(); i++) {
-                map.put(String.valueOf(i), list.get(i));
-            }
-            return map;
-        } else {
-            Map<String, Object> map = new LinkedHashMap<>();
-            map.put("value", data);
-            return map;
+    private static String getFileExtension(String filepath) {
+        int lastDotIndex = filepath.lastIndexOf('.');
+        if (lastDotIndex > 0) {
+            return filepath.substring(lastDotIndex + 1);
         }
+        return "";
     }
 
-    private static Map<String, DiffEntry> buildDiff(Map<String, Object> map1, Map<String, Object> map2) {
+    private static Map<String, DiffEntry> buildDiff(Map<String, Object> map1,
+                                                    Map<String, Object> map2) {
         Map<String, DiffEntry> diff = new TreeMap<>();
         Set<String> allKeys = new HashSet<>();
         allKeys.addAll(map1.keySet());
@@ -102,21 +98,26 @@ public class Differ {
             switch (diffEntry.getStatus()) {
                 case ADDED:
                     result.append("  + ").append(key).append(": ")
-                            .append(formatValue(diffEntry.getNewValue())).append("\n");
+                            .append(formatValue(diffEntry.getNewValue()))
+                            .append("\n");
                     break;
                 case REMOVED:
                     result.append("  - ").append(key).append(": ")
-                            .append(formatValue(diffEntry.getOldValue())).append("\n");
+                            .append(formatValue(diffEntry.getOldValue()))
+                            .append("\n");
                     break;
                 case CHANGED:
                     result.append("  - ").append(key).append(": ")
-                            .append(formatValue(diffEntry.getOldValue())).append("\n");
+                            .append(formatValue(diffEntry.getOldValue()))
+                            .append("\n");
                     result.append("  + ").append(key).append(": ")
-                            .append(formatValue(diffEntry.getNewValue())).append("\n");
+                            .append(formatValue(diffEntry.getNewValue()))
+                            .append("\n");
                     break;
                 case UNCHANGED:
                     result.append("    ").append(key).append(": ")
-                            .append(formatValue(diffEntry.getOldValue())).append("\n");
+                            .append(formatValue(diffEntry.getOldValue()))
+                            .append("\n");
                     break;
                 default:
                     break;
@@ -132,7 +133,7 @@ public class Differ {
             return "null";
         }
         if (value instanceof String) {
-            return (String) value;
+            return value.toString();
         }
         if (value instanceof Boolean) {
             return value.toString();
@@ -158,16 +159,22 @@ public class Differ {
 
             switch (diffEntry.getStatus()) {
                 case ADDED:
-                    result.append("Property '").append(key).append("' was added with value: ")
-                            .append(formatPlainValue(diffEntry.getNewValue())).append("\n");
+                    result.append("Property '").append(key)
+                            .append("' was added with value: ")
+                            .append(formatPlainValue(diffEntry.getNewValue()))
+                            .append("\n");
                     break;
                 case REMOVED:
-                    result.append("Property '").append(key).append("' was removed\n");
+                    result.append("Property '").append(key)
+                            .append("' was removed\n");
                     break;
                 case CHANGED:
-                    result.append("Property '").append(key).append("' was updated. ")
-                            .append("From ").append(formatPlainValue(diffEntry.getOldValue()))
-                            .append(" to ").append(formatPlainValue(diffEntry.getNewValue())).append("\n");
+                    result.append("Property '").append(key)
+                            .append("' was updated. From ")
+                            .append(formatPlainValue(diffEntry.getOldValue()))
+                            .append(" to ")
+                            .append(formatPlainValue(diffEntry.getNewValue()))
+                            .append("\n");
                     break;
                 default:
                     break;
@@ -209,6 +216,7 @@ public class Differ {
             jsonOutput.put(key, diffData);
         }
 
-        return MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(jsonOutput);
+        return JSON_MAPPER.writerWithDefaultPrettyPrinter()
+                .writeValueAsString(jsonOutput);
     }
 }
