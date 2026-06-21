@@ -2,7 +2,6 @@ plugins {
     id("java")
     id("com.github.ben-manes.versions") version "0.53.0"
     id("application")
-    id("org.sonarqube") version "7.3.1.8318"
     id("checkstyle")
     id("jacoco")
 }
@@ -16,14 +15,14 @@ repositories {
 
 dependencies {
     implementation("info.picocli:picocli:4.7.6")
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.15.2")
-    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.15.2")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.18.2")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.18.2")
 
     annotationProcessor("info.picocli:picocli:4.7.6")
 
-    testImplementation(platform("org.junit:junit-bom:5.10.0"))
+    testImplementation(platform("org.junit:junit-bom:5.11.4"))
     testImplementation("org.junit.jupiter:junit-jupiter")
-    testImplementation("org.assertj:assertj-core:3.24.2")
+    testImplementation("org.assertj:assertj-core:3.27.3")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
@@ -36,19 +35,6 @@ application {
     mainClass.set("hexlet.code.App")
 }
 
-sonar {
-    properties {
-        property("sonar.projectKey", "mkalnin_java-project-71")
-        property("sonar.organization", "mkalnin")
-        property("sonar.host.url", "https://sonarcloud.io")
-        property("sonar.sources", "src/main/java")
-        property("sonar.tests", "src/test/java")
-        property("sonar.java.binaries", "build/classes/java/main")
-        property("sonar.java.test.binaries", "build/classes/java/test")
-        property("sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml")
-    }
-}
-
 tasks.jacocoTestReport {
     dependsOn(tasks.test)
     reports {
@@ -58,7 +44,7 @@ tasks.jacocoTestReport {
 }
 
 checkstyle {
-    toolVersion = "10.12.0"
+    toolVersion = "10.21.2"
     configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
     maxErrors = 0
 }
