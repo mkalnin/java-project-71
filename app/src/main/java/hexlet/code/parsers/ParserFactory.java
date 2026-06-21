@@ -13,7 +13,6 @@ public final class ParserFactory {
     }
 
     private ParserFactory() {
-        // Приватный конструктор для утилитарного класса
     }
 
     public static Parser getParser(String extension) throws Exception {
