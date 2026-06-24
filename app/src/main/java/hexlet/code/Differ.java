@@ -141,13 +141,39 @@ public final class Differ {
         if (value instanceof Number) {
             return value.toString();
         }
-        if (value instanceof Map) {
-            return "[complex object]";
-        }
         if (value instanceof List) {
-            return "[array]";
+            return formatList((List<?>) value);
+        }
+        if (value instanceof Map) {
+            return formatMap((Map<?, ?>) value);
         }
         return value.toString();
+    }
+
+    private static String formatList(List<?> list) {
+        StringBuilder result = new StringBuilder("[");
+        for (int i = 0; i < list.size(); i++) {
+            if (i > 0) {
+                result.append(", ");
+            }
+            result.append(list.get(i));
+        }
+        result.append("]");
+        return result.toString();
+    }
+
+    private static String formatMap(Map<?, ?> map) {
+        StringBuilder result = new StringBuilder("{");
+        int count = 0;
+        for (Map.Entry<?, ?> entry : map.entrySet()) {
+            if (count > 0) {
+                result.append(", ");
+            }
+            result.append(entry.getKey()).append("=").append(entry.getValue());
+            count++;
+        }
+        result.append("}");
+        return result.toString();
     }
 
     private static String formatPlain(Map<String, DiffEntry> diff) {
