@@ -5,6 +5,8 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
+import java.nio.file.NoSuchFileException;
+
 @Command(
         name = "gendiff",
         description = "Compares two configuration files and shows a difference.",
@@ -39,6 +41,9 @@ public class App implements Runnable {
         try {
             String result = Differ.generate(filepath1, filepath2, format);
             System.out.println(result);
+        } catch (NoSuchFileException e) {
+            System.err.println("Error: cannot read '" + e.getFile() + "': no such file");
+            System.exit(1);
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
             System.exit(1);

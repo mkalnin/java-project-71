@@ -13,7 +13,7 @@ public class JsonParser implements Parser {
     }
 
     @Override
-    public boolean supports(String extension) {
-        return "json".equalsIgnoreCase(extension);
+    public boolean supports(String format) {
+        return "json".equalsIgnoreCase(format);
     }
 }

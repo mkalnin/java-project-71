@@ -15,11 +15,16 @@ public final class ParserFactory {
     private ParserFactory() {
     }
 
-    public static Parser getParser(String extension) throws Exception {
-        Parser parser = PARSERS.get(extension.toLowerCase());
+    public static Parser getParser(String format) throws Exception {
+        if (format == null || format.isBlank()) {
+            throw new Exception(
+                    "Cannot determine input format. Supported formats: json, yml, yaml"
+            );
+        }
+        Parser parser = PARSERS.get(format.toLowerCase());
         if (parser == null) {
             throw new Exception(
-                    "Unsupported file format: '" + extension
+                    "Unsupported format: '" + format
                             + "'. Supported formats: json, yml, yaml"
             );
         }

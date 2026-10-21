@@ -4,5 +4,5 @@ import java.util.Map;
 
 public interface Parser {
     Map<String, Object> parse(String content) throws Exception;
-    boolean supports(String extension);
+    boolean supports(String format);
 }

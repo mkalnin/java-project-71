@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 class ParserFactoryTest {
 
     @Test
-    @DisplayName("Should return JsonParser for 'json' extension")
+    @DisplayName("Should return JsonParser for 'json' format")
     void testGetJsonParser() throws Exception {
         Parser parser = ParserFactory.getParser("json");
         assertNotNull(parser);
@@ -22,7 +22,7 @@ class ParserFactoryTest {
     }
 
     @Test
-    @DisplayName("Should return YamlParser for 'yml' and 'yaml' extensions")
+    @DisplayName("Should return YamlParser for 'yml' and 'yaml' formats")
     void testGetYamlParser() throws Exception {
         Parser parser = ParserFactory.getParser("yml");
         assertNotNull(parser);
@@ -44,8 +44,18 @@ class ParserFactoryTest {
             ParserFactory.getParser("xml");
         });
 
-        assertTrue(exception.getMessage().contains("Unsupported file format"));
+        assertTrue(exception.getMessage().contains("Unsupported format"));
         assertTrue(exception.getMessage().contains("xml"));
+    }
+
+    @Test
+    @DisplayName("Should throw exception when format is empty")
+    void testEmptyFormat() {
+        Exception exception = assertThrows(Exception.class, () -> {
+            ParserFactory.getParser("");
+        });
+
+        assertTrue(exception.getMessage().contains("Cannot determine input format"));
     }
 
     @Test
@@ -65,7 +75,7 @@ class ParserFactoryTest {
     }
 
     @Test
-    @DisplayName("YamlParser should support both yml and yaml extensions")
+    @DisplayName("YamlParser should support both yml and yaml formats")
     void testYamlParserSupport() throws Exception {
         Parser parser = ParserFactory.getParser("yml");
         assertTrue(parser.supports("yml"));

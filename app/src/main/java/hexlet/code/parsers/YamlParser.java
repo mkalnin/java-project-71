@@ -14,8 +14,8 @@ public class YamlParser implements Parser {
     }
 
     @Override
-    public boolean supports(String extension) {
-        return "yml".equalsIgnoreCase(extension)
-                || "yaml".equalsIgnoreCase(extension);
+    public boolean supports(String format) {
+        return "yml".equalsIgnoreCase(format)
+                || "yaml".equalsIgnoreCase(format);
     }
 }

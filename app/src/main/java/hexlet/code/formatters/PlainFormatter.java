@@ -39,8 +39,10 @@ public class PlainFormatter extends AbstractFormatter {
                         .append(formatPlainValue(diffEntry.getNewValue()))
                         .append("\n");
                 break;
-            default:
+            case UNCHANGED:
                 break;
+            default:
+                throw new RuntimeException("Unknown status: " + diffEntry.getStatus());
         }
     }
 

@@ -25,10 +25,44 @@
 ```bash
 # Клонирование репозитория
 git clone https://github.com/mkalnin/java-project-71.git
-cd java-project-71
+cd java-project-71/app
 
-# Сборка проекта
+# Сборка проекта (тесты + checkstyle)
 make build
 
-# Локальная установка
-make install
+# Сборка исполняемого дистрибутива
+./gradlew installDist
+```
+
+## Использование
+
+```bash
+# Сравнение двух файлов (формат вывода по умолчанию — stylish)
+./build/install/app/bin/app file1.yml file2.yml
+
+# Явное указание формата вывода: stylish, plain, json
+./build/install/app/bin/app -f plain file1.json file2.json
+./build/install/app/bin/app --format json file1.yml file2.yml
+```
+
+Пример вывода в формате `stylish`:
+
+```
+{
+  - follow: false
+    host: hexlet.io
+  - proxy: 123.234.53.22
+  - timeout: 50
+  + timeout: 20
+  + verbose: true
+}
+```
+
+## Разработка
+
+```bash
+make test        # запуск тестов
+make checkstyle  # проверка стиля кода
+make jacoco      # отчёт о покрытии
+make clean       # очистка сборки
+```
